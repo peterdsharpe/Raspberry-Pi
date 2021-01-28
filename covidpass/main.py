@@ -4,6 +4,7 @@ from selenium import webdriver
 import getpass
 import time
 import os
+import pyautogui as pg
 
 pause = lambda: time.sleep(3)  # Add a small pause at times to let elements load
 
@@ -14,6 +15,7 @@ print("CovidPass Automation")
 print(f"Log file from run at: {datetime.now()}")
 
 ### Set up user profile
+print("Setting up user profile...")
 options = webdriver.ChromeOptions()
 username = getpass.getuser()
 if username == "User":
@@ -31,10 +33,10 @@ options.add_argument(
     rf"user-data-dir={user_data_dir}"
 )
 
-### Open Chrome
-driver = webdriver.Chrome(options=options)
 
 ### Open COVIDPass
+print("Opening COVIDPass...")
+driver = webdriver.Chrome(options=options)
 driver.get("https://covidpass.mit.edu")
 pause()
 
@@ -59,6 +61,7 @@ pause()
 # push_button = driver.find_element_by_("push-label")
 
 ### Open Attestation page
+print("Finding and clicking attestation button...")
 buttons = driver.find_elements_by_class_name("nav-item")
 attestation_button = None  # Next few lines: identify the attestation button on the webpage
 for button in buttons:
@@ -77,6 +80,7 @@ def find_button_by_text(text: str):  # Returns the first button on the current p
 
 
 ### Attest, Page 1
+print("Attesting page 1...")
 checkboxes_with_yes = driver.find_elements_by_link_text("Yes")
 checkboxes_with_no = driver.find_elements_by_link_text("No")
 for no_symptom_answer in checkboxes_with_no:
@@ -85,6 +89,7 @@ find_button_by_text("Continue").click()
 pause()
 
 ### Attest, Page 2
+print("Attesting page 2...")
 checkboxes_with_yes = driver.find_elements_by_link_text("Yes")
 checkboxes_with_no = driver.find_elements_by_link_text("No")
 checkboxes_with_no[0].click()
@@ -95,4 +100,6 @@ find_button_by_text("Submit").click()
 pause()
 
 ### Shut down
+print("Shutting down...")
 driver.close()
+
