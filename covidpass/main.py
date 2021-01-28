@@ -7,7 +7,7 @@ import os
 
 pause = lambda: time.sleep(3)  # Add a small pause at times to let elements load
 
-### Print the current date and time
+### Print the current date and time to the log file
 from datetime import datetime
 
 print("CovidPass Automation")
