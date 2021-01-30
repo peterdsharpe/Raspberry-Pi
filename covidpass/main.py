@@ -5,6 +5,10 @@ import getpass
 import time
 import os
 import pyautogui as pg
+import threading
+import pathlib
+
+this_dir = pathlib.Path(__file__).parent.absolute() # Get the current directory
 
 pause = lambda: time.sleep(3)  # Add a small pause at times to let elements load
 
@@ -34,11 +38,41 @@ options.add_argument(
 )
 
 
-### Open COVIDPass
-print("Opening COVIDPass...")
+### Set up a thread to click enter to authenticate certificate
+cert_button_image_files = [
+    this_dir/"images"/"ok_button_pi.png",
+    this_dir/"images"/"ok_button_win.png"
+]
+cert_button_image_files = [str(x) for x in cert_button_image_files]
+
+def click_certificate_authentication_button(timeout=30):
+    start_time = time.time()
+    iter = 0
+    while time.time() < start_time + timeout:  # For the next x seconds, click all "Ok" buttons that appear
+        for image_file in cert_button_image_files:
+            button_location = pg.locateCenterOnScreen(image_file)
+            if button_location is not None:
+                print("(Background thread): Found certificate authentication button, clicking it...")
+                pg.click(button_location)
+                return
+        pause()
+        iter += 1
+        print(f"(Background thread): Did not see a certificate authentication button in iteration {iter}.")
+
+
+print("Prepping to authenticate certificate in separate thread...")
+thread = threading.Thread(target=click_certificate_authentication_button)
+thread.start()
+
+### With main thread, open COVIDPass
+print("Opening COVIDPass in main thread...")
 driver = webdriver.Chrome(options=options)
 driver.get("https://covidpass.mit.edu")
 pause()
+
+###
+# print("Joining threads...")
+# thread.join()
 
 # ### Load cookies
 # pause()
@@ -100,6 +134,10 @@ find_button_by_text("Submit").click()
 pause()
 
 ### Shut down
-print("Shutting down...")
+print("Shutting down driver...")
 driver.close()
 
+print("Joining threads...")
+thread.join()
+
+print("Success!")
