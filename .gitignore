@@ -5,6 +5,7 @@
 ### Project-Specific
 # Add things here!
 **/log.txt
+**/credentials.json
 
 ### IntelliJ project files
 .idea
