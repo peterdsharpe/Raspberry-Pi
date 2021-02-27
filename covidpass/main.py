@@ -83,7 +83,7 @@ try:  # Wrap the whole thing in a try-except block and send a text notification 
             attestation_button = button
             break
     if attestation_button is None:
-        raise Exception("Attestation Button not found!")
+        raise Exception("Attestation Button not found! Likely because you need to Duo Auth again...")
 
     attestation_button.click()
     pause()
@@ -126,6 +126,9 @@ try:  # Wrap the whole thing in a try-except block and send a text notification 
     print("Success!")
 
 except Exception as e:
+
+    print(f"Exception occurred, sending text. Exception:\n{e}")
+
     with open("credentials.json", "r") as f:
         twilio_data = json.load(f)
 
@@ -135,7 +138,7 @@ except Exception as e:
     )
 
     message = client.messages.create(
-        body=f"AutoCovidPass Error: {e}",
+        body=f"AutoCovidPass Error:\n{e}",
         from_=twilio_data["twilio_phone_number"],
         to=twilio_data["my_phone_number"]
     )
