@@ -7,8 +7,7 @@ import os
 import pyautogui as pg
 import threading
 import pathlib
-import json
-from twilio.rest import Client
+from pushbullet import pushbullet_message
 
 try:  # Wrap the whole thing in a try-except block and send a text notification if something goes wrong
     this_dir = pathlib.Path(__file__).parent.absolute()  # Get the current directory
@@ -125,22 +124,10 @@ try:  # Wrap the whole thing in a try-except block and send a text notification 
 
     print("Success!")
 
+    pushbullet_message("AutoCovidPass", "Success!")
+
 except Exception as e:
 
     print(f"Exception occurred, sending text. Exception:\n{e}")
 
-    with open("credentials.json", "r") as f:
-        twilio_data = json.load(f)
-
-    client = Client(
-        twilio_data["twilio_account_sid"],
-        twilio_data["twilio_auth_token"],
-    )
-
-    message = client.messages.create(
-        body=f"AutoCovidPass Error:\n{e}",
-        from_=twilio_data["twilio_phone_number"],
-        to=twilio_data["my_phone_number"]
-    )
-
-    message.sid
+    pushbullet_message("AutoCovidPass", f"Error: {e}")
