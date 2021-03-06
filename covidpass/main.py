@@ -6,11 +6,11 @@ import time
 import os
 import pyautogui as pg
 import threading
-import pathlib
+from pathlib import Path
 from pushbullet import pushbullet_message
 
 try:  # Wrap the whole thing in a try-except block and send a text notification if something goes wrong
-    this_dir = pathlib.Path(__file__).parent.absolute()  # Get the current directory
+    this_dir = Path(__file__).parent.absolute()  # Get the current directory
 
     pause = lambda: time.sleep(3)  # Add a small pause at times to let elements load
 
@@ -124,7 +124,7 @@ try:  # Wrap the whole thing in a try-except block and send a text notification 
 
     print("Success!")
 
-    pushbullet_message("AutoCovidPass", "Success!")
+    # pushbullet_message("AutoCovidPass", "Success!")
 
 except Exception as e:
 

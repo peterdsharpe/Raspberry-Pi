@@ -1,7 +1,10 @@
 import requests
 import json
+from pathlib import Path
 
-with open("credentials.json", "r") as f:
+this_dir = Path(__file__).parent.absolute()  # Get the current directory
+
+with open(this_dir / "credentials.json", "r") as f:
     credentials = json.load(f)
 
 
