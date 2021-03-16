@@ -14,7 +14,7 @@ Steps:
    
     * Create a JSON file in this directory called `credentials.json` with one entry called `{"pushbullet_token": "<insert your token here>"}`. For obvious reasons, don't commit this to Git if you fork this repository.
    
-    That's it! (If you don't want Pushbullet , you might need to tweak `main.py` to remove the `pushbullet_message` part.) 
+    That's it! (If you don't want Pushbullet, you might need to tweak `main.py` to remove the `pushbullet_message` part.) 
 
 3. Set up `cron` to autorun `python3 main.py` or similar every few hours.
 
