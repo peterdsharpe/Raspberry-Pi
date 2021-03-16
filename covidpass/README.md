@@ -1,3 +1,5 @@
+# CovidPass Attestation
+
 Steps:
 
 1. Put this folder on a Raspberry Pi.
