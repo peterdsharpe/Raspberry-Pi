@@ -4,9 +4,13 @@ from pathlib import Path
 
 this_dir = Path(__file__).parent.absolute()  # Get the current directory
 
-with open(this_dir / "credentials.json", "r") as f:
-    credentials = json.load(f)
-
+try:
+    with open(this_dir / "credentials.json", "r") as f:
+        credentials = json.load(f)
+except FileNotFoundError:
+    credentials = {
+        "pushbullet_token": None
+    }
 
 def pushbullet_message(title, body):
     msg = {"type": "note", "title": title, "body": body}
