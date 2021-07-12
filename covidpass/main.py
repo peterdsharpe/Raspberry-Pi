@@ -25,6 +25,7 @@ try:  # Wrap the whole thing in a try-except block and send a text notification 
     options = webdriver.ChromeOptions()
     username = getpass.getuser()
     if username == "User":
+        os.system('taskkill /F /IM "chrome.exe" /T')
         import chromedriver_autoinstaller as ca
 
         ca.install()
