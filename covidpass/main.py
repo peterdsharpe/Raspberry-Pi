@@ -9,6 +9,8 @@ import threading
 from pathlib import Path
 from pushbullet import pushbullet_message
 
+pg.FAILSAFE=False
+
 try:  # Wrap the whole thing in a try-except block and send a text notification if something goes wrong
     this_dir = Path(__file__).parent.absolute()  # Get the current directory
 
@@ -95,26 +97,28 @@ try:  # Wrap the whole thing in a try-except block and send a text notification 
                 return button
         raise ValueError(f"No button found with the text '{text}'")
 
-
-    ### Attest, Page 1
-    print("Attesting page 1...")
-    checkboxes_with_yes = driver.find_elements_by_link_text("Yes")
-    checkboxes_with_no = driver.find_elements_by_link_text("No")
-    for no_symptom_answer in checkboxes_with_no:
-        no_symptom_answer.click()
-    find_button_by_text("Continue").click()
-    pause()
-
-    ### Attest, Page 2
-    print("Attesting page 2...")
+    ### Attest
+    print("Attesting...")
     checkboxes_with_yes = driver.find_elements_by_link_text("Yes")
     checkboxes_with_no = driver.find_elements_by_link_text("No")
     checkboxes_with_no[0].click()
     checkboxes_with_no[1].click()
     checkboxes_with_yes[2].click()
-    checkboxes_with_yes[3].click()
     find_button_by_text("Submit").click()
     pause()
+
+    ### Confirm
+    found_confirmation = False
+    for popup in driver.find_elements_by_class_name("loadedContent"):
+        if "You will be submitting that you do not exhibit symptoms" in popup.text:
+            found_confirmation=True
+            break
+
+    if found_confirmation:
+        find_button_by_text("Yes, I'm sure").click()
+        pause()
+    else:
+        raise Exception("Couldn't find confirmation text!")
 
     ### Shut down
     print("Shutting down driver...")
